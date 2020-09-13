@@ -7,6 +7,9 @@ build:
 .PHONY: create-user
 create-user:
 	docker exec -it go-ucwork go run ./cmd/user/createUser.go ${email} ${password}
+.PHONY: get
+get:
+	docker exec -it go-ucwork go get ${dep}
 .PHONY: delete
 delete:
 	docker stop go-ucwork

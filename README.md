@@ -4,11 +4,15 @@ golangを用いたアプリケーション開発用リポジトリ
 # 実行手順
 
 ```bash
-$ make build-local
+$ # build and run container
+$ make build
 $
-$ make run-local
-docker exec -it go-ucwork ./hello
-Hello world
+$ # exec application
+$ make create-user
 $
-$ make delete-local                                                                                                                                                      [feature/test_layered_architecture]
+$ # delete container
+$ make delete
+$
+$ # add package
+$ make get dep=github.com/sirupsen/logrus
 ```

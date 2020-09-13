@@ -2,4 +2,7 @@ FROM golang:1.14.6
 
 WORKDIR /go/src/app
 
-RUN go get github.com/sirupsen/logrus
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download

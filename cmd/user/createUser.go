@@ -12,7 +12,13 @@ import (
 
 func init() {
 	log.SetFormatter(&log.JSONFormatter{})
-	log.SetLevel(log.WarnLevel)
+	log.SetOutput(os.Stdout)
+	f, err := os.OpenFile("/var/log/ucwork.log", os.O_APPEND | os.O_WRONLY, 0755)
+	if err != nil {
+		log.Fatal(fmt.Errorf("[main.init] %w", err))
+	}
+	log.SetOutput(f)
+	log.SetLevel(log.InfoLevel)
 }
 
 func main()  {

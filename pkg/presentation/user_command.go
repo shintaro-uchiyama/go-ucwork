@@ -2,7 +2,7 @@ package presentation
 
 import (
 	"fmt"
-	domain "github.com/shintaro-uchiyama/go-ucwork/pkg/domain/user"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 )
 
 type UserController struct {

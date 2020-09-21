@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	application "github.com/shintaro-uchiyama/go-ucwork/pkg/application/user"
-	domain "github.com/shintaro-uchiyama/go-ucwork/pkg/domain/user"
-	infrastructure "github.com/shintaro-uchiyama/go-ucwork/pkg/infrastructure/inMemory/user"
-	presentation "github.com/shintaro-uchiyama/go-ucwork/pkg/presentation/cmd"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/application"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/infrastructure"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/presentation"
 	log "github.com/sirupsen/logrus"
 	"os"
 )

@@ -1,9 +1,8 @@
 package infrastructure
 
 import (
-	"errors"
 	"github.com/google/uuid"
-	domain "github.com/shintaro-uchiyama/go-ucwork/pkg/domain/user"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 )
 
 var _ domain.UserRepositoryInterface = (*InMemoryUserRepository)(nil)
@@ -30,5 +29,5 @@ func (r InMemoryUserRepository) Find(email string) (*domain.User, error) {
 			return record, nil
 		}
 	}
-	return nil, errors.New("not found")
+	return nil, &DbError{}
 }

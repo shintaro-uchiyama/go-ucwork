@@ -1,5 +1,6 @@
 FROM golang:1.14.6
 
+EXPOSE 8080
 WORKDIR /go/src/app
 
 COPY go.mod .

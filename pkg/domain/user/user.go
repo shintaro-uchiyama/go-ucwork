@@ -20,3 +20,7 @@ func (u *User) SetUUID(uuid string) {
 func (u User) GetUUID() string {
 	return u.uuid
 }
+
+func (u User) GetEmail() string {
+	return u.email
+}

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	application "github.com/shintaro-uchiyama/go-ucwork/pkg/application/user"
+	domain "github.com/shintaro-uchiyama/go-ucwork/pkg/domain/user"
 	infrastructure "github.com/shintaro-uchiyama/go-ucwork/pkg/infrastructure/inMemory/user"
 	presentation "github.com/shintaro-uchiyama/go-ucwork/pkg/presentation/cmd"
 	log "github.com/sirupsen/logrus"
@@ -18,6 +19,7 @@ func main()  {
 	controller := presentation.NewUserController(
 		application.NewUserApplicationService(
 			infrastructure.NewInMemoryUserRepository(),
+			domain.NewUserService(infrastructure.NewInMemoryUserRepository()),
 		),
 	)
 	user, err := controller.Regist()

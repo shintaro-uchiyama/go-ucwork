@@ -3,10 +3,10 @@ package application
 import domain "github.com/shintaro-uchiyama/go-ucwork/pkg/domain/user"
 
 type UserApplicationService struct {
-	userRepository UserRepositoryInterface
+	userRepository domain.UserRepositoryInterface
 }
 
-func NewUserApplicationService(userRepository UserRepositoryInterface) *UserApplicationService {
+func NewUserApplicationService(userRepository domain.UserRepositoryInterface) *UserApplicationService {
 	return &UserApplicationService{
 		userRepository: userRepository,
 	}

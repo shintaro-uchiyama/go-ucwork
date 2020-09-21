@@ -2,11 +2,10 @@ package infrastructure
 
 import (
 	"github.com/google/uuid"
-	application "github.com/shintaro-uchiyama/go-ucwork/pkg/application/user"
 	domain "github.com/shintaro-uchiyama/go-ucwork/pkg/domain/user"
 )
 
-var _ application.UserRepositoryInterface = (*InMemoryUserRepository)(nil)
+var _ domain.UserRepositoryInterface = (*InMemoryUserRepository)(nil)
 
 type InMemoryUserRepository struct {
 	db map[string]*domain.User

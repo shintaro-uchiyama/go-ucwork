@@ -3,9 +3,7 @@ module github.com/shintaro-uchiyama/go-ucwork
 go 1.14
 
 require (
-	github.com/cespare/reflex v0.2.0 // indirect
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
-	github.com/kr/pty v1.1.8 // indirect
-	github.com/ogier/pflag v0.0.1 // indirect
+	github.com/google/uuid v1.1.2
+	github.com/sirupsen/logrus v1.6.0
+	golang.org/x/sys v0.0.0-20191005200804-aed5e4c7ecf9 // indirect
 )

@@ -25,3 +25,8 @@ func (s UserApplicationService) Regist(user domain.User) (domain.User, error) {
 	savedUser, err := s.userRepository.Save(&user)
 	return *savedUser, err
 }
+
+func (s UserApplicationService) List() (domain.Users, error) {
+	users, err := s.userRepository.FindAll()
+	return *users, err
+}

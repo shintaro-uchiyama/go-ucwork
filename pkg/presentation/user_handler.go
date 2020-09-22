@@ -34,3 +34,14 @@ func (h UserHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, nil)
 	logrus.Info("end create user")
 }
+
+func (h UserHandler) List(c *gin.Context) {
+	logrus.Info("start list user")
+	users, err := h.userApplicationService.List()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, NewUserListResponse(users))
+	logrus.Info("end list user")
+}

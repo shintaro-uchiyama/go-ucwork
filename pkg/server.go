@@ -19,5 +19,6 @@ func main() {
 	)
 	r := gin.Default()
 	r.POST("/users", userHandler.Create)
+	r.GET("/users", userHandler.List)
 	r.Run()
 }

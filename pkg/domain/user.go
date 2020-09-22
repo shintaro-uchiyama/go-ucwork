@@ -6,6 +6,8 @@ type User struct {
 	password string `json:"password" binding:"required"`
 }
 
+type Users []User
+
 func NewUser(email string, password string) *User {
 	return &User{
 		email: email,

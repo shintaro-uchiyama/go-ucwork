@@ -20,14 +20,14 @@ func NewUserHandler(userApplicationService UserApplicationServiceInterface) *Use
 func (h UserHandler) Create(c *gin.Context) {
 	var userCreateRequest UserCreateRequest
 	if err := c.ShouldBind(&userCreateRequest); err != nil {
-		c.JSON(http.StatusBadRequest, NewErrorResponse(err))
+		jsonError(c, http.StatusBadRequest, err)
 		return
 	}
 
 	requestUser := domain.NewUser(userCreateRequest.Email, userCreateRequest.Password)
 	err := h.userApplicationService.Create(*requestUser)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, NewErrorResponse(err))
+		jsonError(c, http.StatusInternalServerError, err)
 		return
 	}
 	c.JSON(http.StatusCreated, nil)
@@ -36,11 +36,11 @@ func (h UserHandler) Create(c *gin.Context) {
 func (h UserHandler) List(c *gin.Context) {
 	users, err := h.userApplicationService.List()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, NewErrorResponse(err))
+		jsonError(c, http.StatusInternalServerError, err)
 		return
 	}
 	if len(users) == 0 {
-		c.JSON(http.StatusNotFound, NewUserListResponse(users))
+		jsonError(c, http.StatusNotFound, err)
 		return
 	}
 	c.JSON(http.StatusOK, NewUserListResponse(users))

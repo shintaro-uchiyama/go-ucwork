@@ -1,12 +1,23 @@
 package main
 
-import "github.com/gin-gonic/gin"
-import "net/http"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/application"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/infrastructure"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/presentation"
+)
 
 func main() {
+	userHandler := presentation.NewUserHandler(
+		application.NewUserApplicationService(
+			infrastructure.NewInMemoryUserRepository(),
+			domain.NewUserService(
+				infrastructure.NewInMemoryUserRepository(),
+			),
+		),
+	)
 	r := gin.Default()
-	r.GET("/users", func(c *gin.Context) {
-		c.JSON(http.StatusCreated, gin.H{"message": "ok boy"})
-	})
+	r.POST("/users", userHandler.Create)
 	r.Run()
 }

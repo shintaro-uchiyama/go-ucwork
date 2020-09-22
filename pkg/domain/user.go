@@ -1,9 +1,9 @@
 package domain
 
 type User struct {
-	uuid string
-	email string
-	password string
+	uuid string `json:"uuid" binding:"-"`
+	email string `json:"email" binding:"required"`
+	password string `json:"password" binding:"required"`
 }
 
 func NewUser(email string, password string) *User {
@@ -23,4 +23,8 @@ func (u User) GetUUID() string {
 
 func (u User) GetEmail() string {
 	return u.email
+}
+
+func (u User) GetPassword() string {
+	return u.password
 }

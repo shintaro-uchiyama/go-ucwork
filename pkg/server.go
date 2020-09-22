@@ -10,12 +10,11 @@ import (
 )
 
 func initRoute() {
+	inMemoryUserRepository := infrastructure.NewInMemoryUserRepository()
 	userHandler := presentation.NewUserHandler(
 		application.NewUserApplicationService(
-			infrastructure.NewInMemoryUserRepository(),
-			domain.NewUserService(
-				infrastructure.NewInMemoryUserRepository(),
-			),
+			inMemoryUserRepository,
+			domain.NewUserService(inMemoryUserRepository),
 		),
 	)
 	r := gin.Default()
@@ -29,7 +28,7 @@ func logMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		logger := logrus.WithFields(logrus.Fields{
 			"method": c.Request.Method,
-			"url": c.Request.URL,
+			"url":    c.Request.URL,
 		})
 		logger.Info("start")
 		c.Next()

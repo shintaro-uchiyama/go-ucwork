@@ -1,9 +1,10 @@
 package presentation
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
-	"net/http"
 )
 
 type UserHandler struct {

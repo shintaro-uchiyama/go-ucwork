@@ -2,6 +2,7 @@ package application
 
 import (
 	"errors"
+
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 )
 
@@ -13,7 +14,7 @@ type UserApplicationService struct {
 func NewUserApplicationService(userRepository domain.UserRepositoryInterface, userService UserServiceInterface) *UserApplicationService {
 	return &UserApplicationService{
 		userRepository: userRepository,
-		userService: userService,
+		userService:    userService,
 	}
 }
 

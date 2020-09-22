@@ -1,7 +1,6 @@
 package infrastructure
 
 import (
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 )
@@ -21,9 +20,6 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 func (r *InMemoryUserRepository) Save(user *domain.User) (*domain.User, error) {
 	user.SetUUID(uuid.New().String())
 	r.db[user.GetUUID()] = user
-	for _, user := range r.db {
-		fmt.Println(fmt.Sprintf("save %+v", user))
-	}
 	return user, nil
 }
 

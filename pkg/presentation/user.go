@@ -3,7 +3,7 @@ package presentation
 import "github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 
 type User struct {
-	Email string `json:"email" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -21,8 +21,8 @@ func NewUserListResponse(users domain.Users) *UserListResponse {
 	var userListResponse UserListResponse
 	for _, user := range users {
 		userListResponse.Users = append(userListResponse.Users, User{
-			Email: user.GetEmail(),
-			Password: user.GetPassword(),
+			Email:    user.Email(),
+			Password: user.Password(),
 		})
 	}
 	return &userListResponse

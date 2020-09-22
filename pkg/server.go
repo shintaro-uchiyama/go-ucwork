@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/application"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
@@ -21,7 +23,10 @@ func initRoute() {
 	r.Use(logMiddleWare())
 	r.POST("/users", userHandler.Create)
 	r.GET("/users", userHandler.List)
-	r.Run()
+	err := r.Run()
+	if err != nil {
+		logrus.Fatal(fmt.Errorf("[main.initRoute]: %w", err))
+	}
 }
 
 func logMiddleWare() gin.HandlerFunc {

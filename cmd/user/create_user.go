@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/application"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/infrastructure"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/presentation"
 	log "github.com/sirupsen/logrus"
-	"os"
 )
 
 func init() {
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetOutput(os.Stdout)
-	f, err := os.OpenFile("/var/log/ucwork.log", os.O_APPEND | os.O_WRONLY, 0755)
+	f, err := os.OpenFile("/var/log/ucwork.log", os.O_APPEND|os.O_WRONLY, 0755)
 	if err != nil {
 		log.Fatal(fmt.Errorf("[main.init] %w", err))
 	}
@@ -21,17 +22,17 @@ func init() {
 	log.SetLevel(log.InfoLevel)
 }
 
-func main()  {
+func main() {
 	controller := presentation.NewUserController(
 		application.NewUserApplicationService(
 			infrastructure.NewInMemoryUserRepository(),
 			domain.NewUserService(infrastructure.NewInMemoryUserRepository()),
 		),
 	)
-	user, err := controller.Regist()
+	user, err := controller.Create()
 	if err != nil {
-		log.Error("regist fail: ", err)
+		log.Error("Create fail: ", err)
 		os.Exit(1)
 	}
-	fmt.Println(fmt.Sprintf("regist success: %+v", user))
+	fmt.Println(fmt.Sprintf("Create success: %+v", user))
 }

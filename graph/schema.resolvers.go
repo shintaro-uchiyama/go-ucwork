@@ -7,20 +7,33 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
+
 	"github.com/shintaro-uchiyama/go-ucwork/graph/generated"
 	"github.com/shintaro-uchiyama/go-ucwork/graph/model"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented"))
+	u, err := uuid.NewRandom()
+	if err != nil {
+		return nil, fmt.Errorf("[graph.CreateTodo]: %w", err)
+	}
+	uu := u.String()
+	todo := &model.Todo{
+		Text:   input.Text,
+		ID:     uu,
+		UserID: input.UserID,
+	}
+	r.todos = append(r.todos, todo)
+	return todo, nil
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.todos, nil
 }
 
 func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.User{ID: obj.UserID, Name: "user " + obj.UserID}, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

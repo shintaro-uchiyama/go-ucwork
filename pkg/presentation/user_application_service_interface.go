@@ -5,6 +5,6 @@ import (
 )
 
 type UserApplicationServiceInterface interface {
-	Regist(user domain.User) (domain.User, error)
+	Create(user domain.User) error
+	List() (domain.Users, error)
 }
-

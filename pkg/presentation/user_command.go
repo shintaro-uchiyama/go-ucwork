@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"fmt"
+
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 )
 
@@ -15,7 +16,7 @@ func NewUserController(service UserApplicationServiceInterface) *UserController 
 	}
 }
 
-func (c UserController) Regist() (domain.User, error) {
+func (c UserController) Create() (domain.User, error) {
 	fmt.Print("Please Enter email: ")
 	var email string
 	_, emailErr := fmt.Scanln(&email)
@@ -31,9 +32,9 @@ func (c UserController) Regist() (domain.User, error) {
 	}
 
 	requestUser := domain.NewUser(email, password)
-	user, err := c.userApplicationService.Regist(*requestUser)
+	err := c.userApplicationService.Create(*requestUser)
 	if err != nil {
 		return domain.User{}, err
 	}
-	return user, err
+	return domain.User{}, err
 }

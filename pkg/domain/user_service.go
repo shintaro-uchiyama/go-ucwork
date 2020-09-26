@@ -10,11 +10,13 @@ func NewUserService(userRepository UserRepositoryInterface) *UserService {
 	}
 }
 
-func (u UserService) Exists(user User) bool{
-	_, err := u.userRepository.Find(user.email)
+func (u UserService) Exists(user User) (bool, error) {
+	foundUser, err := u.userRepository.Find(user.Email())
 	if err != nil {
-		return false
+		return false, err
 	}
-	return true
+	if foundUser != nil {
+		return true, nil
+	}
+	return false, nil
 }
-

@@ -1,6 +1,7 @@
 package domain
 
 type UserRepositoryInterface interface {
-	Save(user *User) (*User, error)
+	Save(user *User) error
 	Find(email string) (*User, error)
+	FindAll() (Users, error)
 }

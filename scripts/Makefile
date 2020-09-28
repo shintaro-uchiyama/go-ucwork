@@ -17,3 +17,6 @@ get:
 delete:
 	docker stop go-ucwork
 	docker rm go-ucwork
+.PHONY: apply
+apply:
+	sh scripts/k8s_apply.sh

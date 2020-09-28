@@ -1,1 +1,3 @@
 .idea
+
+deployments/kubernetes/mysql/password.txt

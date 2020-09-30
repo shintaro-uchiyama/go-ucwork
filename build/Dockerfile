@@ -5,6 +5,9 @@ WORKDIR /go/src/app
 
 COPY go.mod .
 COPY go.sum .
+COPY build/go-ucwork .
 
 RUN go mod download
 RUN go get github.com/cespare/reflex
+
+ENTRYPOINT ["./go-ucwork"]

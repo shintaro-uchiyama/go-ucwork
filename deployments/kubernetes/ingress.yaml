@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ucwork.local
+  annotations:
+    nginx.org/server-snippet: "proxy_ssl_verify off;"
+spec:
+  rules:
+    - host: api.ucwork.local
+      http:
+        paths:
+          - backend:
+              serviceName: graphql
+              servicePort: 80

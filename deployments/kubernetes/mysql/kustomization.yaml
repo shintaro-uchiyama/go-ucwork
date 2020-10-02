@@ -1,0 +1,7 @@
+secretGenerator:
+  - name: mysql-pass
+    files:
+      - ./password
+resources:
+  - mysql-pv.yaml
+  - mysql-deployment.yaml

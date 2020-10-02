@@ -1,0 +1,12 @@
+apiVersion: skaffold/v1
+kind: Config
+metadata:
+  name: go-ucwork
+build:
+  artifacts:
+  - image: shintaro0123/go-ucwork
+    context: ./build/
+deploy:
+  kubectl:
+    manifests:
+    - deployments/kubernetes/graphql/graphql-deployment.yaml

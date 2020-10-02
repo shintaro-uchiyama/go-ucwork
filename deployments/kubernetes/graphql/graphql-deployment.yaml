@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphql
+  labels:
+    app: graphql
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: graphql
+    tier: backend
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: graphql
+  labels:
+    app: graphql
+spec:
+  selector:
+    matchLabels:
+      app: graphql
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: graphql
+        tier: backend
+    spec:
+      containers:
+        - image: docker.io/shintaro0123/go-ucwork
+          name: graphql
+          ports:
+            - containerPort: 8080
+              name: graphql

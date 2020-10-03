@@ -1,13 +1,18 @@
-FROM golang:1.14.6
-
-EXPOSE 8080
+FROM golang:1.15.2-alpine3.12 as builder
 WORKDIR /go/src/app
 
 COPY go.mod .
 COPY go.sum .
-COPY build/go-ucwork .
+RUN go install -v ./...
 
-RUN go mod download
-RUN go get github.com/cespare/reflex
+COPY server.go .
+COPY pkg/ ./pkg/
+COPY graph/ ./graph/
+RUN go build -o /app server.go
 
-ENTRYPOINT ["./go-ucwork"]
+FROM alpine:3.12
+# Define GOTRACEBACK to mark this container as using the Go language runtime
+# for `skaffold debug` (https://skaffold.dev/docs/workflows/debug/).
+ENV GOTRACEBACK=single
+CMD ["./app"]
+COPY --from=builder /app .

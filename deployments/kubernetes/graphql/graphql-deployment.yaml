@@ -35,7 +35,7 @@ spec:
         tier: backend
     spec:
       containers:
-        - image: docker.io/shintaro0123/go-ucwork
+        - image: shintaro0123/go-ucwork:latest
           name: graphql
           ports:
             - containerPort: 8080

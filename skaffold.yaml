@@ -1,11 +1,13 @@
-apiVersion: skaffold/v1
+apiVersion: skaffold/v2beta8
 kind: Config
 metadata:
   name: go-ucwork
 build:
   artifacts:
   - image: shintaro0123/go-ucwork
-    context: ./build/
+    context: .
+    docker:
+      dockerfile: ./build/Dockerfile
 deploy:
   kubectl:
     manifests:

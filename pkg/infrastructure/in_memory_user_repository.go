@@ -1,7 +1,6 @@
 package infrastructure
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/google/uuid"
@@ -26,7 +25,6 @@ func (r *InMemoryUserRepository) Save(user *domain.User) (*domain.User, error) {
 	defer r.lock.Unlock()
 	user.SetUUID(uuid.New().String())
 	r.db[user.UUID()] = user
-	fmt.Println(fmt.Sprintf("db create user: %+v", user))
 	return user, nil
 }
 
@@ -46,8 +44,13 @@ func (r *InMemoryUserRepository) FindAll() ([]domain.User, error) {
 	defer r.lock.RUnlock()
 	var users []domain.User
 	for _, record := range r.db {
-		fmt.Println(fmt.Sprintf("record: %+v", record))
 		users = append(users, *record)
 	}
 	return users, nil
 }
+
+func (r *InMemoryUserRepository) Begin() {}
+
+func (r *InMemoryUserRepository) Rollback() {}
+
+func (r *InMemoryUserRepository) Commit() {}

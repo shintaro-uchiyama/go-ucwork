@@ -33,10 +33,13 @@ func (s UserApplicationService) Create(user domain.User) (*domain.User, error) {
 		return nil, errors.New("[application.Create] request user already registered")
 	}
 
+	s.userRepository.Begin()
 	savedUser, saveErr := s.userRepository.Save(&user)
 	if saveErr != nil {
+		s.userRepository.Rollback()
 		return nil, fmt.Errorf("[application.Create] save user error: %w", saveErr)
 	}
+	s.userRepository.Commit()
 	return savedUser, nil
 }
 

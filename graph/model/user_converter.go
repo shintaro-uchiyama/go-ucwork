@@ -8,13 +8,17 @@ func (u NewUser) ToDomainUser() *domain.User {
 	user := domain.User{}
 	user.SetEmail(u.Email)
 	user.SetPassword(u.Password)
+	user.SetFirstName(u.FirstName)
+	user.SetLastName(u.LastName)
 	return &user
 }
 
 func MapToModelUser(u *domain.User) *User {
 	return &User{
-		UUID:  u.UUID(),
-		Email: u.Email(),
+		UUID:      u.UUID(),
+		Email:     u.Email(),
+		FirstName: u.FirstName(),
+		LastName:  u.LastName(),
 	}
 }
 

@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
@@ -10,7 +11,8 @@ import (
 var _ domain.UserRepositoryInterface = (*InMemoryUserRepository)(nil)
 
 type InMemoryUserRepository struct {
-	db map[string]*domain.User
+	lock sync.RWMutex
+	db   map[string]*domain.User
 }
 
 func NewInMemoryUserRepository() *InMemoryUserRepository {
@@ -20,6 +22,8 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 }
 
 func (r *InMemoryUserRepository) Save(user *domain.User) error {
+	r.lock.Lock()
+	defer r.lock.Unlock()
 	user.SetUUID(uuid.New().String())
 	r.db[user.UUID()] = user
 	fmt.Println(fmt.Sprintf("db create user: %+v", user))
@@ -27,6 +31,8 @@ func (r *InMemoryUserRepository) Save(user *domain.User) error {
 }
 
 func (r *InMemoryUserRepository) Find(email string) (*domain.User, error) {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
 	for _, record := range r.db {
 		if record.Email() == email {
 			return record, nil
@@ -36,6 +42,8 @@ func (r *InMemoryUserRepository) Find(email string) (*domain.User, error) {
 }
 
 func (r *InMemoryUserRepository) FindAll() (domain.Users, error) {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
 	var users domain.Users
 	for _, record := range r.db {
 		fmt.Println(fmt.Sprintf("record: %+v", record))

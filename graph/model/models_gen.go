@@ -9,9 +9,10 @@ type Category struct {
 }
 
 type NewUser struct {
-	Email    string `json:"email"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
 }
 
 type Product struct {
@@ -21,8 +22,9 @@ type Product struct {
 }
 
 type User struct {
-	ID    string `json:"id"`
-	UUID  string `json:"uuid"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	ID        string `json:"id"`
+	UUID      string `json:"uuid"`
+	Email     string `json:"email"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
 }

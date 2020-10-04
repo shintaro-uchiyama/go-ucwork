@@ -21,13 +21,13 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 	}
 }
 
-func (r *InMemoryUserRepository) Save(user *domain.User) error {
+func (r *InMemoryUserRepository) Save(user *domain.User) (*domain.User, error) {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 	user.SetUUID(uuid.New().String())
 	r.db[user.UUID()] = user
 	fmt.Println(fmt.Sprintf("db create user: %+v", user))
-	return nil
+	return user, nil
 }
 
 func (r *InMemoryUserRepository) Find(email string) (*domain.User, error) {
@@ -41,10 +41,10 @@ func (r *InMemoryUserRepository) Find(email string) (*domain.User, error) {
 	return nil, nil
 }
 
-func (r *InMemoryUserRepository) FindAll() (domain.Users, error) {
+func (r *InMemoryUserRepository) FindAll() ([]domain.User, error) {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
-	var users domain.Users
+	var users []domain.User
 	for _, record := range r.db {
 		fmt.Println(fmt.Sprintf("record: %+v", record))
 		users = append(users, *record)

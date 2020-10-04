@@ -6,19 +6,17 @@ package graph
 import (
 	"context"
 
-	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
-
 	"github.com/shintaro-uchiyama/go-ucwork/graph/generated"
 	"github.com/shintaro-uchiyama/go-ucwork/graph/model"
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	user := domain.NewUser(input.Email, input.Password)
-	err := r.userApplicationService.Create(*user)
+	domainUser := input.ToDomainUser()
+	user, err := r.userApplicationService.Create(*domainUser)
 	if err != nil {
-		return &model.User{}, err
+		return nil, err
 	}
-	return &model.User{}, nil
+	return model.MapToModelUser(user), nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

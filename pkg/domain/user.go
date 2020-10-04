@@ -6,8 +6,6 @@ type User struct {
 	password string
 }
 
-type Users []User
-
 func NewUser(email string, password string) *User {
 	return &User{
 		email:    email,
@@ -17,6 +15,14 @@ func NewUser(email string, password string) *User {
 
 func (u *User) SetUUID(uuid string) {
 	u.uuid = uuid
+}
+
+func (u *User) SetEmail(email string) {
+	u.email = email
+}
+
+func (u *User) SetPassword(password string) {
+	u.password = password
 }
 
 func (u User) UUID() string {

@@ -17,7 +17,7 @@ type UserListResponse struct {
 	Users `json:"users" binding:"-"`
 }
 
-func NewUserListResponse(users domain.Users) *UserListResponse {
+func NewUserListResponse(users []domain.User) *UserListResponse {
 	var userListResponse UserListResponse
 	for _, user := range users {
 		userListResponse.Users = append(userListResponse.Users, User{

@@ -23,24 +23,24 @@ func NewUserApplicationService(userRepository domain.UserRepositoryInterface, us
 	}
 }
 
-func (s UserApplicationService) Create(user domain.User) error {
+func (s UserApplicationService) Create(user domain.User) (*domain.User, error) {
 
 	isExist, err := s.userService.Exists(user)
 	if err != nil {
-		return fmt.Errorf("[application.Create] check exist error: %w", err)
+		return nil, fmt.Errorf("[application.Create] check exist error: %w", err)
 	}
 	if isExist {
-		return errors.New("[application.Create] request user already registered")
+		return nil, errors.New("[application.Create] request user already registered")
 	}
 
-	saveErr := s.userRepository.Save(&user)
+	savedUser, saveErr := s.userRepository.Save(&user)
 	if saveErr != nil {
-		return fmt.Errorf("[application.Create] save user error: %w", saveErr)
+		return nil, fmt.Errorf("[application.Create] save user error: %w", saveErr)
 	}
-	return nil
+	return savedUser, nil
 }
 
-func (s UserApplicationService) List() (domain.Users, error) {
+func (s UserApplicationService) List() ([]domain.User, error) {
 	users, err := s.userRepository.FindAll()
 	return users, err
 }

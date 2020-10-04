@@ -20,13 +20,7 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	var responseUsers []*model.User
-	for _, user := range users {
-		responseUsers = append(responseUsers, &model.User{
-			Email: user.Email(),
-		})
-	}
-	return responseUsers, nil
+	return model.MapToModelUsers(users), nil
 }
 
 // Query returns generated.QueryResolver implementation.

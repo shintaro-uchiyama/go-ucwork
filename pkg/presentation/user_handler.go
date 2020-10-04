@@ -25,7 +25,7 @@ func (h UserHandler) Create(c *gin.Context) {
 	}
 
 	requestUser := domain.NewUser(userCreateRequest.Email, userCreateRequest.Password)
-	err := h.userApplicationService.Create(*requestUser)
+	_, err := h.userApplicationService.Create(*requestUser)
 	if err != nil {
 		jsonError(c, http.StatusInternalServerError, err)
 		return

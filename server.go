@@ -1,9 +1,14 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"os"
+	"fmt"
+
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/application"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/infrastructure"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -11,19 +16,48 @@ import (
 	"github.com/shintaro-uchiyama/go-ucwork/graph/generated"
 )
 
-const defaultPort = "8080"
+func graphqlHandler() gin.HandlerFunc {
+	inMemoryUserRepository := infrastructure.NewInMemoryUserRepository()
+	resolver := graph.NewResolver(
+		application.NewUserApplicationService(
+			inMemoryUserRepository,
+			domain.NewUserService(inMemoryUserRepository),
+		),
+	)
+	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
+
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
+
+func playgroundHandler() gin.HandlerFunc {
+	h := playground.Handler("GraphQL", "/query")
+
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
+	r := gin.Default()
+	r.Use(logMiddleWare())
+	r.POST("/query", graphqlHandler())
+	r.GET("/", playgroundHandler())
+	err := r.Run()
+	if err != nil {
+		logrus.Fatal(fmt.Errorf("[main.initRoute]: %w", err))
 	}
+}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
-
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+func logMiddleWare() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		logger := logrus.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"url":    c.Request.URL,
+		})
+		logger.Info("start")
+		c.Next()
+		logger.Info("end")
+	}
 }

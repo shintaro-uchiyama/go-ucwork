@@ -1,6 +1,8 @@
 package infrastructure
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 )
@@ -20,6 +22,7 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 func (r *InMemoryUserRepository) Save(user *domain.User) error {
 	user.SetUUID(uuid.New().String())
 	r.db[user.UUID()] = user
+	fmt.Println(fmt.Sprintf("db create user: %+v", user))
 	return nil
 }
 
@@ -35,6 +38,7 @@ func (r *InMemoryUserRepository) Find(email string) (*domain.User, error) {
 func (r *InMemoryUserRepository) FindAll() (domain.Users, error) {
 	var users domain.Users
 	for _, record := range r.db {
+		fmt.Println(fmt.Sprintf("record: %+v", record))
 		users = append(users, *record)
 	}
 	return users, nil

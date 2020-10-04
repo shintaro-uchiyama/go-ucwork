@@ -16,7 +16,17 @@ func (r *queryResolver) Products(ctx context.Context) ([]*model.Product, error) 
 }
 
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	return r.users, nil
+	users, err := r.userApplicationService.List()
+	if err != nil {
+		return nil, err
+	}
+	var responseUsers []*model.User
+	for _, user := range users {
+		responseUsers = append(responseUsers, &model.User{
+			Email: user.Email(),
+		})
+	}
+	return responseUsers, nil
 }
 
 // Query returns generated.QueryResolver implementation.

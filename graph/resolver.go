@@ -7,5 +7,12 @@ import "github.com/shintaro-uchiyama/go-ucwork/graph/model"
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	users []*model.User
+	users                  []*model.User
+	userApplicationService UserApplicationServiceInterface
+}
+
+func NewResolver(userApplicationService UserApplicationServiceInterface) *Resolver {
+	return &Resolver{
+		userApplicationService: userApplicationService,
+	}
 }

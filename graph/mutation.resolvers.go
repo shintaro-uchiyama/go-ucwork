@@ -5,27 +5,20 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/google/uuid"
+	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 
 	"github.com/shintaro-uchiyama/go-ucwork/graph/generated"
 	"github.com/shintaro-uchiyama/go-ucwork/graph/model"
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	u, err := uuid.NewRandom()
+	user := domain.NewUser(input.Email, input.Password)
+	err := r.userApplicationService.Create(*user)
 	if err != nil {
-		return nil, fmt.Errorf("[graph.CreateTodo]: %w", err)
+		return &model.User{}, err
 	}
-	uu := u.String()
-	user := &model.User{
-		ID:   uu,
-		UUID: uu,
-		Name: input.Name,
-	}
-	r.users = append(r.users, user)
-	return user, nil
+	return &model.User{}, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

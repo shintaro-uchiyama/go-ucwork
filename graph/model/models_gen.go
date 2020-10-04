@@ -2,12 +2,27 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Category struct {
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	CategoryID string `json:"categoryID"`
+}
+
+type NewUser struct {
+	Email    string `json:"email"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
+type Product struct {
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	CategoryID string `json:"categoryID"`
 }
 
 type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID    string `json:"id"`
+	UUID  string `json:"uuid"`
+	Email string `json:"email"`
+	Name  string `json:"name"`
 }

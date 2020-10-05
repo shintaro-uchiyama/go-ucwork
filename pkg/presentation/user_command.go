@@ -1,6 +1,7 @@
 package presentation
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
@@ -32,7 +33,7 @@ func (c UserController) Create() (domain.User, error) {
 	}
 
 	requestUser := domain.NewUser(email, password)
-	user, err := c.userApplicationService.Create(*requestUser)
+	user, err := c.userApplicationService.Create(context.Background(), *requestUser)
 	if err != nil {
 		return domain.User{}, err
 	}

@@ -12,7 +12,7 @@ import (
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	domainUser := input.ToDomainUser()
-	user, err := r.userApplicationService.Create(*domainUser)
+	user, err := r.userApplicationService.Create(ctx, *domainUser)
 	if err != nil {
 		return nil, err
 	}

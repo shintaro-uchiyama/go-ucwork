@@ -1,6 +1,7 @@
 package application
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -13,28 +14,38 @@ var _ presentation.UserApplicationServiceInterface = (*UserApplicationService)(n
 
 type UserApplicationService struct {
 	userRepository domain.UserRepositoryInterface
+	firebaseAuth   FirebaseAuthInterface
 	userService    UserServiceInterface
 }
 
-func NewUserApplicationService(userRepository domain.UserRepositoryInterface, userService UserServiceInterface) *UserApplicationService {
+func NewUserApplicationService(
+	userRepository domain.UserRepositoryInterface,
+	firebaseAuth FirebaseAuthInterface,
+	userService UserServiceInterface,
+) *UserApplicationService {
 	return &UserApplicationService{
 		userRepository: userRepository,
+		firebaseAuth:   firebaseAuth,
 		userService:    userService,
 	}
 }
 
-func (s UserApplicationService) Create(user domain.User) (*domain.User, error) {
-
-	isExist, err := s.userService.Exists(user)
-	if err != nil {
-		return nil, fmt.Errorf("[application.Create] check exist error: %w", err)
+func (s UserApplicationService) Create(ctx context.Context, user domain.User) (*domain.User, error) {
+	isExist, existErr := s.userService.Exists(user)
+	if existErr != nil {
+		return nil, fmt.Errorf("[application.Create] check exist existError: %w", existErr)
 	}
 	if isExist {
 		return nil, errors.New("[application.Create] request user already registered")
 	}
 
+	firebaseUser, firebaseErr := s.firebaseAuth.CreateUser(ctx, &user)
+	if firebaseErr != nil {
+		return nil, fmt.Errorf("[application.Create] firebase create user error: %w", firebaseErr)
+	}
+
 	s.userRepository.Begin()
-	savedUser, saveErr := s.userRepository.Save(&user)
+	savedUser, saveErr := s.userRepository.Save(firebaseUser)
 	if saveErr != nil {
 		s.userRepository.Rollback()
 		return nil, fmt.Errorf("[application.Create] save user error: %w", saveErr)

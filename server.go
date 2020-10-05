@@ -18,9 +18,11 @@ import (
 
 func graphqlHandler() gin.HandlerFunc {
 	inMemoryUserRepository := infrastructure.NewInMemoryUserRepository()
+	client, _ := infrastructure.NewUserFirebaseAuth()
 	resolver := graph.NewResolver(
 		application.NewUserApplicationService(
 			inMemoryUserRepository,
+			client,
 			domain.NewUserService(inMemoryUserRepository),
 		),
 	)

@@ -26,6 +26,7 @@ func main() {
 	controller := presentation.NewUserController(
 		application.NewUserApplicationService(
 			infrastructure.NewInMemoryUserRepository(),
+			nil,
 			domain.NewUserService(infrastructure.NewInMemoryUserRepository()),
 		),
 	)

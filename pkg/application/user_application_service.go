@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/presentation"
@@ -14,31 +13,20 @@ var _ presentation.UserApplicationServiceInterface = (*UserApplicationService)(n
 
 type UserApplicationService struct {
 	userRepository domain.UserRepositoryInterface
-	firebaseAuth   FirebaseAuthInterface
-	userService    UserServiceInterface
+	firebaseAuth   domain.FirebaseAuthInterface
 }
 
 func NewUserApplicationService(
 	userRepository domain.UserRepositoryInterface,
-	firebaseAuth FirebaseAuthInterface,
-	userService UserServiceInterface,
+	firebaseAuth domain.FirebaseAuthInterface,
 ) *UserApplicationService {
 	return &UserApplicationService{
 		userRepository: userRepository,
 		firebaseAuth:   firebaseAuth,
-		userService:    userService,
 	}
 }
 
 func (s UserApplicationService) Create(ctx context.Context, user domain.User) (*domain.User, error) {
-	isExist, existErr := s.userService.Exists(user)
-	if existErr != nil {
-		return nil, fmt.Errorf("[application.Create] check exist existError: %w", existErr)
-	}
-	if isExist {
-		return nil, errors.New("[application.Create] request user already registered")
-	}
-
 	firebaseUser, firebaseErr := s.firebaseAuth.CreateUser(ctx, &user)
 	if firebaseErr != nil {
 		return nil, fmt.Errorf("[application.Create] firebase create user error: %w", firebaseErr)

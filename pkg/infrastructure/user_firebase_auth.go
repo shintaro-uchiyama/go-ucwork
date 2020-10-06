@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"google.golang.org/api/option"
-
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 
 	"firebase.google.com/go/auth"
@@ -18,9 +16,7 @@ type UserFirebaseAuth struct {
 }
 
 func NewUserFirebaseAuth() (*UserFirebaseAuth, error) {
-	opt := option.WithCredentialsFile("/google-app-creds.json")
-	config := &firebase.Config{ProjectID: "uchiyama-sandbox"}
-	app, err := firebase.NewApp(context.Background(), config, opt)
+	app, err := firebase.NewApp(context.Background(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("[infrastructure.NewUserFirebaseAuth] initializing firebase app error: %w", err)
 	}
@@ -46,5 +42,20 @@ func (u *UserFirebaseAuth) CreateUser(ctx context.Context, user *domain.User) (*
 	}
 	var domainUser domain.User
 	domainUser.SetUUID(createdUser.UID)
+	return &domainUser, nil
+}
+
+func (u *UserFirebaseAuth) GetUserByEmail(ctx context.Context, user *domain.User) (*domain.User, error) {
+	foundUser, err := u.client.GetUserByEmail(ctx, user.Email())
+	if err != nil {
+		return nil, fmt.Errorf("[infrastructure.GetUserByEmail]: %w", err)
+	}
+
+	if foundUser != nil {
+		return nil, nil
+	}
+
+	domainUser := domain.User{}
+	domainUser.SetEmail(foundUser.Email)
 	return &domainUser, nil
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/application"
-	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/infrastructure"
 
 	"github.com/gin-gonic/gin"
@@ -18,12 +17,15 @@ import (
 
 func graphqlHandler() gin.HandlerFunc {
 	inMemoryUserRepository := infrastructure.NewInMemoryUserRepository()
-	client, _ := infrastructure.NewUserFirebaseAuth()
+	userFirebaseAuth, firebaseErr := infrastructure.NewUserFirebaseAuth()
+	if firebaseErr != nil {
+		logrus.Fatal(fmt.Errorf("[main.initRoute]: %w", firebaseErr))
+		panic(firebaseErr)
+	}
 	resolver := graph.NewResolver(
 		application.NewUserApplicationService(
 			inMemoryUserRepository,
-			client,
-			domain.NewUserService(inMemoryUserRepository),
+			userFirebaseAuth,
 		),
 	)
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))

@@ -3,11 +3,11 @@ WORKDIR /go/src/app
 
 COPY go.mod .
 COPY go.sum .
-RUN go install -v ./...
+RUN go mod download
 
 COPY server.go .
-COPY pkg/ ./pkg/
 COPY graph/ ./graph/
+COPY pkg/ ./pkg/
 RUN go build -o /app server.go
 
 FROM alpine:3.12

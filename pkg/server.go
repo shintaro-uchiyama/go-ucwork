@@ -5,18 +5,22 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/application"
-	"github.com/shintaro-uchiyama/go-ucwork/pkg/domain"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/infrastructure"
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/presentation"
 	"github.com/sirupsen/logrus"
 )
 
 func initRoute() {
+	userFirebaseAuth, firebaseErr := infrastructure.NewUserFirebaseAuth()
+	if firebaseErr != nil {
+		logrus.Fatal(fmt.Errorf("[main.initRoute]: %w", firebaseErr))
+		panic(firebaseErr)
+	}
 	inMemoryUserRepository := infrastructure.NewInMemoryUserRepository()
 	userHandler := presentation.NewUserHandler(
 		application.NewUserApplicationService(
 			inMemoryUserRepository,
-			domain.NewUserService(inMemoryUserRepository),
+			userFirebaseAuth,
 		),
 	)
 	r := gin.Default()

@@ -1,4 +1,5 @@
 .idea
 
 deployments/kubernetes/mysql/password
-firebase-adminsdk.json*
+firebase-adminsdk.json
+firebase-adminsdk.json.enc

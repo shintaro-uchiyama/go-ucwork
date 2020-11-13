@@ -1,7 +1,7 @@
 package application
 
 import (
-	"errors"
+	"context"
 	"fmt"
 
 	"github.com/shintaro-uchiyama/go-ucwork/pkg/presentation"
@@ -13,34 +13,36 @@ var _ presentation.UserApplicationServiceInterface = (*UserApplicationService)(n
 
 type UserApplicationService struct {
 	userRepository domain.UserRepositoryInterface
-	userService    UserServiceInterface
+	firebaseAuth   domain.FirebaseAuthInterface
 }
 
-func NewUserApplicationService(userRepository domain.UserRepositoryInterface, userService UserServiceInterface) *UserApplicationService {
+func NewUserApplicationService(
+	userRepository domain.UserRepositoryInterface,
+	firebaseAuth domain.FirebaseAuthInterface,
+) *UserApplicationService {
 	return &UserApplicationService{
 		userRepository: userRepository,
-		userService:    userService,
+		firebaseAuth:   firebaseAuth,
 	}
 }
 
-func (s UserApplicationService) Create(user domain.User) error {
-
-	isExist, err := s.userService.Exists(user)
-	if err != nil {
-		return fmt.Errorf("[application.Create] check exist error: %w", err)
-	}
-	if isExist {
-		return errors.New("[application.Create] request user already registered")
+func (s UserApplicationService) Create(ctx context.Context, user domain.User) (*domain.User, error) {
+	firebaseUser, firebaseErr := s.firebaseAuth.CreateUser(ctx, &user)
+	if firebaseErr != nil {
+		return nil, fmt.Errorf("[application.Create] firebase create user error: %w", firebaseErr)
 	}
 
-	saveErr := s.userRepository.Save(&user)
+	s.userRepository.Begin()
+	savedUser, saveErr := s.userRepository.Save(firebaseUser)
 	if saveErr != nil {
-		return fmt.Errorf("[application.Create] save user error: %w", saveErr)
+		s.userRepository.Rollback()
+		return nil, fmt.Errorf("[application.Create] save user error: %w", saveErr)
 	}
-	return nil
+	s.userRepository.Commit()
+	return savedUser, nil
 }
 
-func (s UserApplicationService) List() (domain.Users, error) {
+func (s UserApplicationService) List() ([]domain.User, error) {
 	users, err := s.userRepository.FindAll()
 	return users, err
 }

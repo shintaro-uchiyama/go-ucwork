@@ -11,6 +11,10 @@ spec:
     targetPort: 8080
     protocol: TCP
     name: http
+  - port: 56269
+    targetPort: 56269
+    protocol: TCP
+    name: debug
   selector:
     app: graphql
     tier: backend
@@ -35,8 +39,10 @@ spec:
         tier: backend
     spec:
       containers:
-        - image: docker.io/shintaro0123/go-ucwork
+        - image: shintaro0123/go-ucwork:latest
           name: graphql
           ports:
             - containerPort: 8080
               name: graphql
+            - containerPort: 56268
+              name: debug

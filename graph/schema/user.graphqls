@@ -1,0 +1,14 @@
+type User {
+    id: ID!
+    uuid: String!
+    email: String!
+    firstName: String!
+    lastName: String!
+}
+
+input NewUser {
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+}
